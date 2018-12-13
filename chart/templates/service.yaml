@@ -10,10 +10,14 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.port.client }}
+      targetPort: {{ .Values.service.port.client }}
       protocol: TCP
-      name: http
+      name: client
+    - port: {{ .Values.service.port.monitor }}
+      targetPort: {{ .Values.service.port.monitor }}
+      protocol: TCP
+      name: monitor
   selector:
     app: {{ include "nats-streaming.name" . }}
     release: {{ .Release.Name }}

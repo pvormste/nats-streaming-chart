@@ -23,25 +23,30 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.database.enabled }}
           args: [
-            "--store SQL",
+            "-p", "{{ .Values.service.port.client }}",
+            "-m", "{{ .Values.service.port.monitor }}",
+            {{- if .Values.database.enabled }}
+            "--store", "SQL",
             "--sql_driver", "{{ .Values.database.driver }}",
             "--sql_source", "{{ .Values.database.connectionString }}"
-          ]
-          {{- end }}
+            {{- end }}
+          ]   
           ports:
-            - name: http
-              containerPort: 80
+            - name: client
+              containerPort: {{ .Values.service.port.client }}
+              protocol: TCP
+            - name: monitor
+              containerPort: {{ .Values.service.port.monitor }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: {{ .Values.monitorPort }}
+              port: {{ .Values.service.port.monitor }}
           readinessProbe:
             httpGet:
               path: /
-              port: {{ .Values.monitorPort }}
+              port: {{ .Values.service.port.monitor }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}

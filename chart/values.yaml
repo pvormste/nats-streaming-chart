@@ -9,7 +9,6 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-monitorPort: 8222
 database:
   enabled: false
   driver: ""
@@ -20,16 +19,18 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 80
+  port:
+    client: 4222
+    monitor: 8222
 
 ingress:
-  enabled: false
+  enabled: true
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
-  hosts:
-    - chart-example.local
+  hostsSuffix:
+    - .development-ingress.hadcs.de
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

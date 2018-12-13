@@ -1,0 +1,4 @@
+database:
+  enabled: true
+  driver: "postgres"
+  connectionString: "postgres://user:password@kubernetes-service/dbname?sslmode=disable"

@@ -1,2 +1,2 @@
-*.postgres.yml
-*.mysql.yml
+values.postgres.yml
+values.mysql.yml
