@@ -13,8 +13,11 @@
   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "nats-streaming.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   echo http://$SERVICE_IP:{{ .Values.service.port.monitor }}
 {{- end }}
+
+
+Port forwarding:
 export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ include "nats-streaming.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-echo "Port forwarding:"
-echo "kubectl port-forward $POD_NAME 8080:{{ .Values.service.port.client }}"
-echo "Use http://127.0.0.1:{{ .Values.service.port.client }} to connect to the nats server"
+kubectl port-forward $POD_NAME {{ .Values.service.port.client }}:{{ .Values.service.port.client }}
+
+Use http://127.0.0.1:{{ .Values.service.port.client }} to connect to the nats server
 
